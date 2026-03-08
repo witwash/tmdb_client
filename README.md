@@ -1,3 +1,3 @@
 # tmdb_client
 
-A new Flutter project.
+A playground for experiments with REST API.
