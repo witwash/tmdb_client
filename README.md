@@ -225,4 +225,4 @@ This is a learning project. Feel free to use as reference.
 **Status**: 🚧 In Development  
 **Architecture**: Clean Architecture  
 **State Management**: Signals  
-**Last Updated**: 2024
+**Last Updated**: 2026
