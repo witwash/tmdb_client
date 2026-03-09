@@ -6,7 +6,7 @@ part 'movie_model.g.dart';
 /// 🎯 MOVIE MODEL (Data Layer)
 /// Handles JSON serialization from TMDB API.
 @freezed
-class MovieModel with _$MovieModel {
+abstract class MovieModel with _$MovieModel {
   const factory MovieModel({
     @JsonKey(name: 'id') required int id,
     @JsonKey(name: 'title') required String title,
@@ -32,7 +32,7 @@ class MovieModel with _$MovieModel {
 /// 🎯 MOVIES RESPONSE MODEL
 /// Wrapper for TMDB paginated responses
 @freezed
-class MoviesResponse with _$MoviesResponse {
+abstract class MoviesResponse with _$MoviesResponse {
   const factory MoviesResponse({
     @JsonKey(name: 'page') required int page,
     @JsonKey(name: 'results') required List<MovieModel> results,

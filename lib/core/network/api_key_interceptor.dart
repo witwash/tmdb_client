@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 class ApiKeyInterceptor extends Interceptor {
   final String apiKey;
 
-  ApiKeyInterceptor(this.apiKey);
+  const ApiKeyInterceptor(this.apiKey);
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.queryParameters.addAll({'api_key': apiKey});
+    options.queryParameters.putIfAbsent('api_key', () => apiKey);
     super.onRequest(options, handler);
   }
 }
