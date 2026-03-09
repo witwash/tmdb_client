@@ -16,7 +16,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    _result = _testingFuture();
     _dio = Dio();
     _apiService = MovieApiService(_dio);
     _result = _testingFuture();
