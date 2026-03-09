@@ -115,26 +115,27 @@ A Flutter application for practicing REST API skills with The Movie Database (TM
 | Package | Version | Purpose |
 |---------|---------|---------|
 | **`dio`** | ^5.7.0 | HTTP client for REST API calls |
+| **`retrofit`** | ^4.1.0 | Type-safe REST client generator |
 
-**Why Dio?**
-- Interceptors for logging, auth, error handling
-- Request/Response transformation
-- Built-in timeout configuration
-- Better error handling than http package
-- Global configuration support
+**Why Dio & Retrofit?**
+- **Type Safety**: Retrofit generates type-safe API clients from simple interfaces.
+- **Interceptors**: `ApiKeyInterceptor` automatically adds the TMDB API key to every request.
+- **Ease of Use**: Reduces boilerplate by handling JSON mapping and endpoint configuration.
+- **Logging**: Pre-configured `LogInterceptor` for development debugging.
+- **Timeout Support**: Standardized connection and receive timeouts.
 
 ---
 
 ### Functional Programming
 | Package | Version | Purpose |
 |---------|---------|---------|
-| **`fpdart`** | ^1.1.0 | Functional programming utilities |
+| **`dfunc`** | ^0.10.0 | Lightweight functional utilities for Dart |
 
-**Why FpDart?**
-- `Either<Left, Right>` for elegant error handling
-- No exceptions thrown to presentation layer
-- Makes error handling explicit and type-safe
-- Functional composition support
+**Why dfunc?**
+- **Dart-Native**: More aligned with Dart's philosophy than heavier FP libraries.
+- **Either Type**: Provides clean error handling without throwing exceptions.
+- **Optional Extensions**: Kotlin-like `let` and `maybeMap` for safe nullable handling.
+- **Lightweight**: Minimal impact on binary size while providing essential FP tools.
 
 ---
 
@@ -214,7 +215,8 @@ lib/
 │   │   ├── failures.dart                 # Domain-level failure classes
 │   │   └── exceptions.dart               # Data-level exception classes
 │   ├── network/
-│   │   └── dio_client.dart               # Dio configuration & interceptors
+│   │   ├── api_key_interceptor.dart      # Adds API key to query params
+│   │   └── dio_client.dart               # Dio initialization & setup
 │   └── injection/
 │       └── injection_container.dart      # GetIt dependency injection setup
 │
@@ -235,8 +237,9 @@ lib/
         │   ├── models/
         │   │   └── movie_model.dart      # Freezed model + JSON (extends entity)
         │   ├── datasources/
+        │   │   ├── movie_api_service.dart             # Retrofit API interface
         │   │   ├── movie_remote_datasource.dart       # Data source interface
-        │   │   └── movie_remote_datasource_impl.dart  # Dio implementation
+        │   │   └── movie_remote_datasource_impl.dart  # Impl using MovieApiService
         │   └── repositories/
         │       └── movie_repository_impl.dart  # Repository implementation
         │
@@ -322,9 +325,10 @@ lib/
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │ 5. Data Layer (MovieRemoteDataSourceImpl)                  │
-│    Makes HTTP request via Dio                               │
-│    GET /movie/popular?api_key=xxx                          │
-│    ├─ Success: Returns List<MovieModel>                   │
+│    Calls MovieApiService (Retrofit)                         │
+│    GET /movie/popular                                       │
+│    (ApiKeyInterceptor adds api_key=xxx)                    │
+│    ├─ Success: Returns MoviesResponse                     │
 │    └─ Error: Throws ServerException/NetworkException      │
 └────────────────────────┬────────────────────────────────────┘
                          │
@@ -695,11 +699,13 @@ class MyWidget extends StatelessWidget {
 
 #### Creating Either
 ```dart
+import 'package:dfunc/dfunc.dart';
+
 // Success
-return Right<Failure, Movie>(movie);
+return Either.right(movie);
 
 // Failure
-return Left<Failure, Movie>(ServerFailure('Error'));
+return Either.left(ServerFailure('Error'));
 ```
 
 #### Handling Either with Fold
@@ -707,27 +713,15 @@ return Left<Failure, Movie>(ServerFailure('Error'));
 final result = await repository.getMovie(1);
 
 result.fold(
-  (failure) {
+  left: (failure) {
     // Handle error (Left side)
     print('Error: ${failure.message}');
   },
-  (movie) {
+  right: (movie) {
     // Handle success (Right side)
     print('Success: ${movie.title}');
   },
 );
-```
-
-#### Checking Either State
-```dart
-if (result.isRight()) {
-  // Success
-  final movie = result.getOrElse(() => Movie.empty());
-}
-
-if (result.isLeft()) {
-  // Failure
-}
 ```
 
 ---
@@ -878,7 +872,7 @@ Sizes: w92, w154, w185, w342, w500, w780, original
 
 ### Packages
 - [Freezed Package Guide](https://pub.dev/packages/freezed)
-- [FpDart Documentation](https://pub.dev/packages/fpdart)
+- [dfunc Documentation](https://pub.dev/packages/dfunc)
 - [Dio Documentation](https://pub.dev/packages/dio)
 - [GetIt Documentation](https://pub.dev/packages/get_it)
 
@@ -1019,7 +1013,7 @@ For questions about:
 
 ---
 
-**Last Updated**: 2024  
+**Last Updated**: 2026
 **Flutter SDK**: ^3.10.9  
 **Dart SDK**: ^3.10.9  
 **Architecture**: Clean Architecture  
