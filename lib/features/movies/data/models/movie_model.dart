@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tmdb_client/features/movies/domain/entities/movie.dart';
 
 part 'movie_model.freezed.dart';
 part 'movie_model.g.dart';
@@ -7,6 +8,8 @@ part 'movie_model.g.dart';
 /// Handles JSON serialization from TMDB API.
 @freezed
 abstract class MovieModel with _$MovieModel {
+  const MovieModel._();
+
   const factory MovieModel({
     @JsonKey(name: 'id') required int id,
     @JsonKey(name: 'title') required String title,
@@ -27,6 +30,26 @@ abstract class MovieModel with _$MovieModel {
   /// Factory for JSON deserialization
   factory MovieModel.fromJson(Map<String, dynamic> json) =>
       _$MovieModelFromJson(json);
+
+  /// Convert data model to domain entity
+  Movie toEntity() {
+    return Movie(
+      id: id,
+      title: title,
+      overview: overview,
+      posterPath: posterPath,
+      backdropPath: backdropPath,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
+      releaseDate: releaseDate,
+      genreIds: genreIds,
+      popularity: popularity,
+      video: video,
+      adult: adult,
+      originalLanguage: originalLanguage,
+      originalTitle: originalTitle,
+    );
+  }
 }
 
 /// 🎯 MOVIES RESPONSE MODEL

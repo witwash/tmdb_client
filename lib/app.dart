@@ -19,12 +19,19 @@ class _AppState extends State<App> {
     _result = _testingFuture();
     _dio = Dio();
     _apiService = MovieApiService(_dio);
+    _result = _testingFuture();
+  }
+
+  @override
+  void dispose() {
+    _dio.close();
+    super.dispose();
   }
 
   Future<String> _testingFuture() async {
     final result = await _apiService.getPopularMovies();
-    final topMovie = result.results.firstOrNull ?? 'Not found :-/';
-    return 'Top Movie: $topMovie';
+    final topMovie = result.results.firstOrNull;
+    return 'Top Movie: ${topMovie ?? "Not found :-/"}';
   }
 
   @override
@@ -34,11 +41,13 @@ class _AppState extends State<App> {
       builder: (context, snapshot) {
         return Center(
           child: switch (snapshot) {
-            AsyncSnapshot(hasData: true, :final data) => Text('Data is $data'),
+            AsyncSnapshot(hasData: true, :final data) =>
+              Text('Data is ${data ?? "No data"}'),
             AsyncSnapshot<String>(data: String(), hasData: false) ||
-            AsyncSnapshot<String>(data: null, hasData: false) => Column(
-              children: [CircularProgressIndicator(), Text('Waiting...')],
-            ),
+            AsyncSnapshot<String>(data: null, hasData: false) =>
+              const Column(
+                children: [CircularProgressIndicator(), Text('Waiting...')],
+              ),
           },
         );
       },

@@ -221,8 +221,8 @@ return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backd
 /// @nodoc
 @JsonSerializable()
 
-class _MovieModel implements MovieModel {
-  const _MovieModel({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'title') required this.title, @JsonKey(name: 'overview') required this.overview, @JsonKey(name: 'poster_path') this.posterPath, @JsonKey(name: 'backdrop_path') this.backdropPath, @JsonKey(name: 'vote_average') required this.voteAverage, @JsonKey(name: 'vote_count') required this.voteCount, @JsonKey(name: 'release_date') this.releaseDate, @JsonKey(name: 'genre_ids') required final  List<int> genreIds, @JsonKey(name: 'popularity') this.popularity, @JsonKey(name: 'video') this.video, @JsonKey(name: 'adult') this.adult, @JsonKey(name: 'original_language') this.originalLanguage, @JsonKey(name: 'original_title') this.originalTitle}): _genreIds = genreIds;
+class _MovieModel extends MovieModel {
+  const _MovieModel({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'title') required this.title, @JsonKey(name: 'overview') required this.overview, @JsonKey(name: 'poster_path') this.posterPath, @JsonKey(name: 'backdrop_path') this.backdropPath, @JsonKey(name: 'vote_average') required this.voteAverage, @JsonKey(name: 'vote_count') required this.voteCount, @JsonKey(name: 'release_date') this.releaseDate, @JsonKey(name: 'genre_ids') required final  List<int> genreIds, @JsonKey(name: 'popularity') this.popularity, @JsonKey(name: 'video') this.video, @JsonKey(name: 'adult') this.adult, @JsonKey(name: 'original_language') this.originalLanguage, @JsonKey(name: 'original_title') this.originalTitle}): _genreIds = genreIds,super._();
   factory _MovieModel.fromJson(Map<String, dynamic> json) => _$MovieModelFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
